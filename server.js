@@ -74,7 +74,7 @@ app.use('/api/expenses', expenseRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/payments', paymentRoutes);
-app.use('/api', memberRoutes);
+app.use('/api/health', memberRoutes);
 
 /* ---------------------------
          HEALTH CHECK
