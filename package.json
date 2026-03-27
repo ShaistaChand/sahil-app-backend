@@ -1,0 +1,22 @@
+{
+  "name": "sahil-app",
+  "version": "1.0.0",
+  "description": "Group expense tracking app",
+  "scripts": {
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "build:all": "npm run build:client",
+    "deploy": "npm run build:all",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build:client": "cd client && npm run build",
+    "start": "cd server && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "dependencies": {
+    "nodemailer": "^7.0.10",
+    "saslprep": "^1.0.3"
+  }
+}

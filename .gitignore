@@ -1,0 +1,30 @@
+    # Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+
+# Environment
+.env
+.env.local
+
+# Windows-specific files
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+ehthumbs_vista.db
+
+# IDE/Editor (if you use VS Code)
+.vscode/
+
+# Build outputs (if you create them)
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+ 

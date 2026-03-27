@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: sahil-app-backend
+    env: node
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        fromDatabase:
+          name: sahil-app-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: STRIPE_SECRET_KEY
+        value: your_stripe_secret_key
+      - key: RAZORPAY_KEY_SECRET
+        value: your_razorpay_secret
+
+  - type: web
+    name: sahil-app-frontend
+    env: static
+    buildCommand: npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://sahil-app-backend.onrender.com
+
+databases:
+  - name: sahil-app-db
+    plan: free
+    type: mongodb
