@@ -79,6 +79,11 @@ app.use('/health', memberRoutes);
 /* ---------------------------
          HEALTH CHECK
 ---------------------------- */
+
+app.get('/', (req, res) => {
+  res.send('Backend is running successfully!');
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
