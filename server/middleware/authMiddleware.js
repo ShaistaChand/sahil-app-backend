@@ -19,9 +19,14 @@ const protect = async (req, res, next) => {
     try {
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+       console.log("🔍 DECODED TOKEN PAYLOAD IS:", decoded);
+
+      // Try userId first, then fall back to id or _id
+  const targetId = decoded.userId || decoded.id || decoded._id;
       
       // Get user from token
-      req.user = await User.findById(decoded.userId).select('-password');
+      req.user = await User.findById(targetId).select('-password');
       
       if (!req.user) {
         return res.status(401).json({

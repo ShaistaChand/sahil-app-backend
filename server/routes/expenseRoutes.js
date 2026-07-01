@@ -76,10 +76,14 @@ router.post('/:id/settle', protect, async (req, res) => {
 
 router.post('/', protect, async (req, res) => {
   try {
-    console.log('📦 Creating expense with data:', req.body);
+
+    // 🌟 ADD THIS SPECIFIC LIVE PRINT LINE HERE:
+    console.log('🚨 ABSOLUTE RAW REQ.BODY IS:', JSON.stringify(req.body, null, 2));
+
+    console.log('📦 Creating expense with incoming data payload:', req.body);
 
     // Simple validation
-    const { description, amount, category, group, date } = req.body;
+    const { description, amount, category, group, groupId: incomingGroupId, date } = req.body;
     
     if (!description || !description.trim()) {
       return res.status(400).json({
@@ -104,10 +108,14 @@ router.post('/', protect, async (req, res) => {
 
     // Handle group ID - convert empty/undefined to null
     let groupId = null;
-    if (group && group.trim() !== '' && group !== 'undefined' && group !== 'null') {
+
+    // THE UNIFIER: Merge both variable targets together safely
+    const targetGroup = group || incomingGroupId;
+
+    if (targetGroup  && targetGroup.trim() !== '' && targetGroup !== 'undefined' && targetGroup !== 'null') {
       // Validate if it's a proper MongoDB ObjectId
-      if (mongoose.Types.ObjectId.isValid(group)) {
-        groupId = group;
+      if (mongoose.Types.ObjectId.isValid(targetGroup)) {
+        groupId = targetGroup;
         
         // Verify user is member of this group
         const groupDoc = await Group.findOne({
@@ -150,15 +158,42 @@ router.post('/', protect, async (req, res) => {
       amount: parseFloat(amount),
       category: category.trim(),
       date: expenseDate,
-      paidBy: req.user._id
+      paidBy: req.user._id,
+
+      
+       // 🌟 THE UNIFIER: Explicitly tell your database model to capture the group ID
+      // even if the request hits the individual /expenses endpoint path!
+      group: groupId || incomingGroupId || req.body.group || req.body.groupId || null
+      
     };
 
     // Only add group if it exists and is valid
     if (groupId) {
       expenseData.group = groupId;
+      expenseData.groupId = groupId;
     }
 
     console.log('✅ Final expense data for creation:', expenseData);
+
+        // 🌟 THE FINAL HANDSHAKE: Automatically build the participant split array if missing!
+    if (groupId) {
+      const groupDoc = await Group.findById(groupId);
+      if (groupDoc && groupDoc.members && groupDoc.members.length > 0) {
+        
+        // Calculate the equal split amount per person
+        const equalShare = parseFloat((parseFloat(amount) / groupDoc.members.length).toFixed(2));
+        
+        // Map every member into the participants array required by your schema
+        expenseData.participants = groupDoc.members.map(member => ({
+          user: member.user,
+          share: equalShare,
+          paid: member.user.toString() === req.user._id.toString() // Payer is marked auto-paid
+        }));
+        
+        expenseData.splitType = 'equal';
+      }
+    }
+
 
     // Create the expense
     const expense = await Expense.create(expenseData);

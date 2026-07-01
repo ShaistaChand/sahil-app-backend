@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, PieChart, Edit, Trash2, IndianRupee } from 'lucide-react';
 import AddExpenseModal from '../components/expenses/AddExpenseModal';
 import EditExpenseModal from '../components/expenses/EditExpenseModal';
-import { useExpenseStore } from '../stores/expenseStrore';
+import { useExpenseStore } from '../stores/expenseStore';
 import { useGroupStore } from '../stores/groupStore';
 import { useAuthStore } from '../stores/authStore';
 import { Link } from 'react-router-dom';
@@ -11,7 +11,6 @@ import SubscriptionPlans from '../components/payment/SubscriptionPlans';
 import { useLanguage } from '../contexts/languageContext';
 import SEO from './SEO';
 import SubscriptionPopup from '../components/payment/SubscriptionPopup';
-import { TRIAL_DAYS } from '../utils/trial';
 
 const Dashboard = () => {
   const user = useAuthStore((s) => s.user);
@@ -81,15 +80,30 @@ const Dashboard = () => {
         <AddExpenseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         <EditExpenseModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
 
+        {/* 🌟 FIXED: Renders the subscription overlay popup safely when showSubscription is true */}
+        {showSubscription && (
+          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100 }}>
+            <SubscriptionPlans onClose={() => setShowSubscription(false)} />
+          </div>
+        )}
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <div>
             <h1 className="text-3xl font-bold">{t('dashboard')}</h1>
             <p style={{ color: 'var(--text-light)' }}>{t('welcome')}! Here is your spending overview</p>
           </div>
 
+          {/* 🌟 FIXED: Placed your custom premium button directly inside your main active header tools layout */}
           <div style={{ display: 'flex', gap: 8 }}>
+            <button 
+              className="btn btn-outline" 
+              style={{ borderColor: 'var(--primary)', color: 'var(--primary)', fontWeight: 600 }}
+              onClick={() => setShowSubscription(true)}
+            >
+              👑 Premium Upgrade
+            </button>
             <Link to="/groups/create" className="btn btn-outline"><Plus /> {t('createGroup')}</Link>
-            <button className="btn btn-primary" onClick={() => (user?.subscription?.status !== 'active' ? setShowSubscription(true) : setIsModalOpen(true))}><Plus /> {t('addExpense')}</button>
+            <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}><Plus /> {t('addExpense')}</button>
           </div>
         </div>
 
@@ -137,13 +151,23 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-      </div>
 
-      {showSubscription && (
-        <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.5)', zIndex: 1000 }}>
-          <SubscriptionPlans onClose={() => setShowSubscription(false)} />
+        {/* Clean & Simple Dashboard Navigation Portal */}
+        <div className="container mt-4 px-0">
+          <div className="card p-3 border-0 bg-light shadow-sm">
+            <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+              <div>
+                <h5 className="fw-bold mb-1">Shared Group Ledgers</h5>
+                <p className="text-muted small mb-0">Track shared bills, split expenses, and settle balances with friends.</p>
+              </div>
+              <div className="mt-3 mt-sm-0">
+                <a href="/groups" className="btn btn-primary fw-semibold px-4">View Active Groups ({groups?.length || 0})</a>
+              </div>
+            </div>
+          </div>
         </div>
-      )}
+
+      </div>
     </>
   );
 };

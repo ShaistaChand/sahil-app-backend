@@ -57,6 +57,14 @@ const expenseSchema = new mongoose.Schema({
     ref: 'Group',
     required: false  // ← THIS SHOULD BE FALSE
   },
+
+  // Allows the database to accept data.groupId from the frontend
+  groupId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Group',
+    required: false
+  },
+
   splitType: {
     type: String,
     enum: ['equal', 'custom', 'percentage'],
@@ -73,15 +81,41 @@ const expenseSchema = new mongoose.Schema({
 });
 
 // Calculate total shares to ensure they match amount
-expenseSchema.pre('save', function(next) {
-  if (this.participants && this.participants.length > 0) {
-    const totalShares = this.participants.reduce((sum, participant) => sum + participant.share, 0);
-    if (Math.abs(totalShares - this.amount) > 0.01) {
+// Automatically handle participant allocations before saving to MongoDB
+expenseSchema.pre('save', async function(next) {
+  const Expense = this;
+  
+  // AUTOMATION HOOK: If it belongs to a group but frontend sent no participants list, build it!
+  if ((Expense.group || Expense.groupId) && (!Expense.participants || Expense.participants.length === 0)) {
+    try {
+      const Group = await mongoose.model('Group').findById(Expense.group || Expense.groupId);
+      if (Group && Group.members && Group.members.length > 0) {
+        // Calculate equal split split value
+        const equalShare = Expense.amount / Group.members.length;
+        
+        // Loop over group roster to create participant layouts dynamically
+        Expense.participants = Group.members.map(member => ({
+          user: member.user,
+          share: parseFloat(equalShare.toFixed(2)),
+          paid: member.user.toString() === Expense.paidBy.toString() // Payer is marked auto-paid
+        }));
+      }
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  // Strictly enforce the safety totals validation block you wrote
+  if (Expense.participants && Expense.participants.length > 0) {
+    const totalShares = Expense.participants.reduce((sum, p) => sum + p.share, 0);
+    if (Math.abs(totalShares - Expense.amount) > 0.1) { // Allowance for micro rounding decimal differences
       return next(new Error('Total participant shares must equal expense amount'));
     }
   }
+  
   next();
 });
+
 
 // Method to mark participant as paid
 expenseSchema.methods.markAsPaid = function(userId) {

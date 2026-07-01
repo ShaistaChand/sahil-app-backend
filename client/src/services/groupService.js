@@ -24,6 +24,12 @@ const addMember = (groupId, email) => {
   return api.post(`/groups/${groupId}/members`, { email });
 };
 
+// FETCH HANDLER:
+const getGroupMembers = (groupId) => {
+  return api.get(`/groups/${groupId}/members`);
+};
+
+
 const removeMember = (groupId, memberId) => {
   return api.delete(`/groups/${groupId}/members/${memberId}`);
 };
@@ -35,5 +41,6 @@ export default {
   updateGroup,
   deleteGroup,
   addMember,
-  removeMember
+  removeMember,
+  getGroupMembers
 };

@@ -32,6 +32,11 @@ export const useAuthStore = create(
           const user = data.user || data;
           const token = data.token || response.data?.token || null;
 
+          // 🌟 ADD THIS CRUCIAL LINE HERE TO SAVE IT PERMANENTLY:
+    if (token) {
+      localStorage.setItem('token', token);
+    }
+
           set({ user, token, isLoading: false });
           return { success: true, user, token };
         } catch (err) {
@@ -48,6 +53,11 @@ export const useAuthStore = create(
           const data = response.data?.data || response.data || {};
           const user = data.user || data;
           const token = data.token || response.data?.token || null;
+
+          // 🌟 ADD THIS CRUCIAL LINE HERE TO SAVE IT PERMANENTLY:
+    if (token) {
+      localStorage.setItem('token', token);
+    }
 
           set({ user, token, isLoading: false });
           return { success: true, user, token };

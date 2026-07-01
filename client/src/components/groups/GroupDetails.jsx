@@ -19,7 +19,10 @@ const GroupDetails = () => {
     }
   }, [id, getGroup, fetchExpenses]);
 
-  const groupExpenses = expenses.filter(expense => expense.group === id);
+  // 🌟 ACCEPTS BOTH OBJECT FORMATS SO IT FINDS THE SAVED EXPENSES
+  const groupExpenses = expenses.filter(expense => 
+    expense.group === id || expense.groupId === id || expense.group?._id === id || expense.groupId?._id === id
+  );
 
   if (loading) {
     return <div className="loading-spinner">Loading group details...</div>;

@@ -25,8 +25,7 @@ const Footer = () => {
               </div>
 
             <p style={{ color: 'var(--text-light)', fontSize: '0.875rem', lineHeight: '1.5' }}>
-              Making group expenses simple and stress-free. Perfect for UAE brunches, 
-              Indian trips, and any group gathering.
+              Making group expenses simple and stress-free. Perfect for brunches, holiday trips, and shared living.
             </p>
           </div>
 
@@ -66,10 +65,10 @@ const Footer = () => {
           <div>
             <h4 style={{ marginBottom: '1rem', color: 'var(--text)' }}>Pricing</h4>
             <div style={{ color: 'var(--text-light)', fontSize: '0.875rem', lineHeight: '1.5' }}>
-              <div>UAE: AED 35/month</div>
+              <div>UAE: AED 15/month</div>
               <div>India: ₹ 249/month</div>
               <div style={{ marginTop: '0.5rem', fontSize: '0.75rem' }}>
-                +1.5% transaction fee on settlements
+                {/* +1.5% transaction fee on settlements */}
               </div>
             </div>
           </div>
@@ -86,10 +85,10 @@ const Footer = () => {
           gap: '1rem'
         }}>
           <div style={{ color: 'var(--text-light)', fontSize: '0.875rem' }}>
-            © 2024 Sahil App. All rights reserved.
+            © 2024-2026 Sahil App. All rights reserved. Registered under Nu Ventures (Ajman, UAE).
           </div>
           <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', color: 'var(--text-light)' }}>
-            <span>Made with 💚 for UAE & India</span>
+            <span>Made with 💚 for stress-free splitting and to bring people together.</span>
           </div>
         </div>
       </div>

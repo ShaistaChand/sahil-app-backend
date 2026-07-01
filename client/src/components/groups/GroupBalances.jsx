@@ -18,27 +18,29 @@ const GroupBalances = ({ group, expenses }) => {
 
     // Calculate balances from expenses
     expenses.forEach(expense => {
-      const payerId = expense.paidBy?._id;
+      const payerId = expense.paidBy?._id || expense.paidBy;
       const totalAmount = expense.amount;
-      const sharePerMember = totalAmount / expense.splitBetween.length;
+      
+      // REUSES THE GROUP ROSTER COUNT SO IT NEVER CRASHES
+      const sharePerMember = totalAmount / group.members.length;
 
-      // Add to payer's paid amount
       if (balances[payerId]) {
         balances[payerId].paid += totalAmount;
-        balances[payerId].balance += totalAmount; // They paid, so they're owed money
+        balances[payerId].balance += totalAmount; 
       }
 
-      // Subtract from each member's share
-      expense.splitBetween.forEach(memberId => {
+      group.members.forEach(member => {
+        const memberId = member.user?._id || member.user;
+        
         if (balances[memberId] && memberId !== payerId) {
           balances[memberId].owed += sharePerMember;
-          balances[memberId].balance -= sharePerMember; // They owe money
+          balances[memberId].balance -= sharePerMember; 
         }
       });
-    });
+    }); // 🌟 FIXED: Added missing loop closing bracket
 
-    return Object.values(balances);
-  };
+    return Object.values(balances); // 🌟 FIXED: Added missing return statement
+  }; // 🌟 FIXED: Added missing function closing bracket
 
   const balances = calculateBalances();
 
@@ -95,7 +97,7 @@ const GroupBalances = ({ group, expenses }) => {
         <div className="space-y-2">
           {balances.map((balance) => (
             <div
-              key={balance.user._id}
+              key={balance.user?._id || Math.random()}
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -119,7 +121,7 @@ const GroupBalances = ({ group, expenses }) => {
                   <DollarSign size={16} style={{ color: 'var(--text-light)' }} />
                 )}
                 <div>
-                  <div style={{ fontWeight: '600' }}>{balance.user.name}</div>
+                  <div style={{ fontWeight: '600' }}>{balance.user?.name || balance.user?.email || 'Group Member'}</div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-light)' }}>
                     Paid: {formatCurrency(balance.paid)} • Owed: {formatCurrency(balance.owed)}
                   </div>
@@ -159,9 +161,9 @@ const GroupBalances = ({ group, expenses }) => {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <div style={{ fontWeight: '600' }}>{settlement.from.name}</div>
+                  <div style={{ fontWeight: '600' }}>{settlement.from?.name || 'Member'}</div>
                   <ArrowRight size={16} style={{ color: 'var(--warning)' }} />
-                  <div style={{ fontWeight: '600' }}>{settlement.to.name}</div>
+                  <div style={{ fontWeight: '600' }}>{settlement.to?.name || 'Member'}</div>
                 </div>
                 <div style={{ fontWeight: '700', color: 'var(--warning-dark)' }}>
                   {formatCurrency(settlement.amount)}

@@ -1,3 +1,5 @@
+import dns from 'node:dns/promises'; dns.setServers(['8.8.8.8', '1.1.1.1']);
+
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -22,12 +24,19 @@ const PORT = process.env.PORT || 5000;
 /* ---------------------------
        CORS MUST BE HERE
 ---------------------------- */
+
 app.use(cors({
-  origin: "*", // ["http://localhost:5173", "http://127.0.0.1:5173"],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "Accept"]
+  origin: 'http://localhost:5173', // Your exact frontend URL
+  credentials: true                // Allows cookies/tokens to pass through safely
 }));
+
+
+// app.use(cors({
+//   origin: "*", // ["http://localhost:5173", "http://127.0.0.1:5173"],
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization", "Accept"]
+// }));
 
 /* ---------------------------
         SECURITY + BODY PARSER
@@ -119,7 +128,7 @@ app.use(errorHandler);
 /* ---------------------------
          START SERVER
 ---------------------------- */
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);

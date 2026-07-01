@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { isRTL, getTextDirection, languages, t } from '../utils/rtl';
 
-const LanguageContext = createContext();
+export const LanguageContext = createContext();
 
 export const useLanguage = () => {
   const context = useContext(LanguageContext);

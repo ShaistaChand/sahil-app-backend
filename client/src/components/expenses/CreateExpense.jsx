@@ -1,7 +1,7 @@
 // client/src/components/expenses/CreateExpense.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useExpenseStore } from '../../stores/expenseStrore'; // your file name, ensure this matches actual filename
+import { useExpenseStore } from '../../stores/expenseStore'; // your file name, ensure this matches actual filename
 import { useGroupStore } from '../../stores/groupStore';
 import { useAuthStore } from '../../stores/authStore';
 import { toast } from 'react-hot-toast';
