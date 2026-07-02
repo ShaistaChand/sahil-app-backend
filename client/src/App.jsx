@@ -14,7 +14,7 @@ import GroupsList from './components/groups/GroupsList';
 import CreateGroup from './components/groups/CreateGroup';
 import GroupDetails from './components/groups/GroupDetails';
 import CreateExpense from './components/expenses/CreateExpense';
-import { LanguageContext, LanguageProvider } from './contexts/languageContext';
+import { LanguageContext, LanguageProvider } from './contexts/LanguageContext';
 
 import { useAuthStore } from './stores/authStore';
 
