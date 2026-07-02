@@ -94,7 +94,7 @@ const SubscriptionPlans = ({ onClose }) => {
           {/* 📸 FIXED IMAGE PATH: Uses direct access root link syntax */}
           <div style={{ textAlign: 'center', margin: '12px 0 8px 0' }}>
             <img 
-              src="/wio-qr.png.jpeg" 
+              src="/wio-qr.png" 
               alt="Scan to Pay" 
               style={{ maxWidth: '140px', width: '100%', borderRadius: '4px', border: '1px solid #ddd' }} 
               onError={(e) => { e.target.style.display = 'none'; console.log('QR Image not found in client/public/'); }}
