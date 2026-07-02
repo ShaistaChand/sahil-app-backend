@@ -8,7 +8,7 @@ import { useGroupStore } from '../stores/groupStore';
 import { useAuthStore } from '../stores/authStore';
 import { Link } from 'react-router-dom';
 import SubscriptionPlans from '../components/payment/SubscriptionPlans';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from '../contexts/LanguageContext.jsx';
 import SEO from './SEO';
 import SubscriptionPopup from '../components/payment/SubscriptionPopup';
 
