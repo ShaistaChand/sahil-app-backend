@@ -13,7 +13,7 @@ import Dashboard from './pages/Dashboard';
 import GroupsList from './components/groups/GroupsList';
 import CreateGroup from './components/groups/CreateGroup';
 import GroupDetails from './components/groups/GroupDetails';
-import CreateExpense from './components/expenses/CreateExpense';
+import CreateExpense from '../src/components/expenses/CreateExpense';
 import { LanguageContext, LanguageProvider } from './contexts/LanguageContext.jsx';
 
 import { useAuthStore } from './stores/authStore';
