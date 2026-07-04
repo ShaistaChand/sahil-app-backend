@@ -5,9 +5,13 @@ import { useAuthStore } from '../stores/authStore';
 const BASE = 'https://sahil-app-backend.onrender.com/api';
 
 const api = axios.create({
-  baseURL: `${BASE}/api`,
+  // baseURL: `${BASE}/api`,
+  baseURL: BASE,
   timeout: 15000,
   withCredentials: true, // keep if your backend uses cookies, safe to have
+  headers: {
+    'Content-Type': 'application/json',
+  'Accept': 'application/json'}
 });
 
 // Attach token from zustand store for each request

@@ -1,4 +1,4 @@
-import dns from 'node:dns/promises'; dns.setServers(['8.8.8.8', '1.1.1.1']);
+// import dns from 'node:dns/promises'; dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 import express from 'express';
 import mongoose from 'mongoose';
@@ -26,8 +26,10 @@ const PORT = process.env.PORT || 5000;
 ---------------------------- */
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Your exact frontend URL
-  credentials: true                // Allows cookies/tokens to pass through safely
+  origin: 'https://sahilapp.netlify.app', // Your exact frontend URL
+  credentials: true,              // Allows cookies/tokens to pass through safely
+   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Accept"]
 }));
 
 
@@ -41,7 +43,15 @@ app.use(cors({
 /* ---------------------------
         SECURITY + BODY PARSER
 ---------------------------- */
-app.use(helmet());
+/* ---------------------------
+   SECURITY (CORS-COMPATIBLE)
+---------------------------- */
+// Configures Helmet safely so it doesn't block cross-domain cookies or logins!
+
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginOpenerPolicy: { policy: "unsafe-none" }
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -83,7 +93,8 @@ app.use('/api/expenses', expenseRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/payments', paymentRoutes);
-app.use('/health', memberRoutes);
+// app.use('/health', memberRoutes);
+app.use('/api/members', memberRoutes); // FIXED: Moved member routes safely under an explicit prefix pathway!
 
 /* ---------------------------
          HEALTH CHECK
@@ -93,6 +104,8 @@ app.get('/', (req, res) => {
   res.send('Backend is running successfully!');
 });
 
+// Primary platform health telemetry loop
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
@@ -101,7 +114,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Root health check (no /api prefix)
+// Root health check fallback (no /api prefix)
 app.get('/health', (req, res) => {
     res.status(200).json({ 
         status: 'OK', 
