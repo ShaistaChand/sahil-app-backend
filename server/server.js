@@ -25,12 +25,40 @@ const PORT = process.env.PORT || 5000;
        CORS MUST BE HERE
 ---------------------------- */
 
+const allowedOrigins = [
+  'https://sahilapp.netlify.app',        // <-- Your primary URL
+  'https://sahilapp.netlify.app',        // Keep only one, no trailing slash
+  'http://localhost:5173',               // For local Vite development
+  'http://localhost:3000'                // For local React development
+];
+
 app.use(cors({
-  origin: 'https://sahilapp.netlify.app', // Your exact frontend URL
-  credentials: true,              // Allows cookies/tokens to pass through safely
-   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "Accept"]
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like from mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true); // Origin is allowed
+    } else {
+      console.log('🚫 CORS BLOCKED:', origin); // This will help you debug
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
+
+// Handle preflight requests (OPTIONS) explicitly
+app.options('*', cors());
+
+
+// app.use(cors({
+//   origin: 'https://sahilapp.netlify.app', // Your exact frontend URL
+//   credentials: true,              // Allows cookies/tokens to pass through safely
+//    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization", "Accept"]
+// }));
 
 
 // app.use(cors({
