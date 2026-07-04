@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
   // ADD THESE NEW FIELDS:
   country: {
     type: String,
-    enum: ['UAE', 'India'],
+    enum: ['US', 'IN', 'GB', 'CA', 'AU', 'FR', 'DE', 'IT', 'ES', 'BR', 'JP', 'CN', 'RU', 'ZA', 'NG', 'PK', 'BD', 'MX', 'ID', 'TR', 'KR', 'SA', 'AE', 'EG', 'KE', 'GH', 'TZ', 'UG', 'ZM', 'ZW', 'MW', 'MZ', 'AO', 'CM', 'CI', 'NE', 'BF', 'ML', 'SN', 'TD', 'SO', 'ER', 'DJ', 'ET', 'SD', 'SS', 'LY', 'TN', 'DZ', 'MA', 'MR', 'GM', 'GN', 'SL', 'LR', 'CV', 'ST', 'GQ', 'GA', 'CG', 'CD', 'CF', 'RW', 'BI', 'SC', 'KM', 'MU', 'FJ', 'PG', 'SB', 'VU', 'WS', 'TO', 'KI', 'TV', 'NR', 'PW', 'MH', 'FM', 'WS', 'TO', 'KI', 'TV', 'NR', 'PW', 'MH', 'FM'],
     required: true,
     default: 'UAE'
   },
