@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { useAuthStore } from '../stores/authStore';
 
-const BASE = import.meta.env.VITE_API_URL || 'https://onrender.com';
+const BASE = 'https://sahil-app-backend.onrender.com/api';
 
 const api = axios.create({
   baseURL: `${BASE}/api`,
